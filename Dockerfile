@@ -1,7 +1,7 @@
 FROM alpine
 MAINTAINER Rafał Krypa <rafal@krypa.net>
 
-ENV FFMPEG_VERSION=3.1.2
+ENV FFMPEG_VERSION=3.1.3
 ENV FFMPEG_URL=http://johnvansickle.com/ffmpeg/releases/ffmpeg-$FFMPEG_VERSION-64bit-static.tar.xz
 
 RUN wget -q $FFMPEG_URL -O - | tar xJC /tmp --no-same-owner; \
