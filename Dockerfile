@@ -1,14 +1,15 @@
-FROM alpine
+FROM alpine AS tmp
 MAINTAINER Rafał Krypa <rafal@krypa.net>
 
-ENV FFMPEG_VERSION=3.1.4
-ENV FFMPEG_URL=https://johnvansickle.com/ffmpeg/releases/ffmpeg-$FFMPEG_VERSION-64bit-static.tar.xz
+ARG FFMPEG_VERSION=3.3
+ARG FFMPEG_URL=https://johnvansickle.com/ffmpeg/releases/ffmpeg-$FFMPEG_VERSION-64bit-static.tar.xz
 
-RUN apk add --no-cache openssl;                              \
-    wget -q $FFMPEG_URL -O - | tar xJC /tmp --no-same-owner; \
-    apk del openssl;                                         \
-    mv /tmp/ffmpeg*/ffmpeg /usr/local/bin/;                  \
-    rm -rf /tmp/ffmpeg*/
+ADD ${FFMPEG_URL} /tmp/ffmpeg.tar.xz
+RUN cd /tmp && tar xJf ffmpeg.tar.xz
 
-ENTRYPOINT ["ffmpeg"]
+FROM scratch
+
+COPY --from=tmp /tmp/ffmpeg*/ffmpeg /bin/
+
+ENTRYPOINT ["/bin/ffmpeg"]
 CMD ["--help"]
